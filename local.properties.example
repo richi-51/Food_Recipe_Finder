@@ -1,0 +1,13 @@
+# File konfigurasi lokal untuk SDK dan API Keys
+# Rename/Copy file ini menjadi 'local.properties' di lokal komputer Anda, jangan di-upload.
+
+# Lokasi SDK Android (Otomatis dibuat oleh Android Studio)
+# Windows:
+# sdk.dir=C\:\\Users\\USERNAME\\AppData\\Local\\Android\\Sdk
+# Mac:
+# sdk.dir=/Users/USERNAME/Library/Android/sdk
+
+# Konfigurasi Kredensial Sensitif (Contoh penggunaan)
+# Hapus tanda pagar untuk menggunakan
+# API_KEY_QUOTES="isi_dengan_api_key_rahasia_anda_disini"
+# BASE_URL="https://api.example.com/"
