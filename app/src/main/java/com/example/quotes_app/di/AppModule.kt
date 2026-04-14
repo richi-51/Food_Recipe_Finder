@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.quotes_app.data.api.RecipeApi
 import com.example.quotes_app.data.local.RecipeDao
+import com.example.quotes_app.data.local.OwnRecipeDao
 import com.example.quotes_app.data.local.RecipeDatabase
 import dagger.Module
 import dagger.Provides
@@ -54,12 +55,20 @@ object AppModule {
             context,
             RecipeDatabase::class.java,
             "recipe_db"
-        ).build()
+        )
+        .fallbackToDestructiveMigration() // Simple for this task, usually you'd write a migration
+        .build()
     }
 
     @Provides
     @Singleton
     fun provideRecipeDao(database: RecipeDatabase): RecipeDao {
         return database.recipeDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOwnRecipeDao(database: RecipeDatabase): OwnRecipeDao {
+        return database.ownRecipeDao()
     }
 }
