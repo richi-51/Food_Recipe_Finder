@@ -26,9 +26,28 @@
     </fragment>
 
     <fragment
+        android:id="@+id/ownRecipeFragment"
+        android:name="com.example.quotes_app.presentation.OwnRecipeFragment"
+        android:label="Own Recipes"
+        tools:layout="@layout/fragment_own_recipe">
+        <action
+            android:id="@+id/action_ownRecipeFragment_to_addRecipeFragment"
+            app:destination="@id/addRecipeFragment" />
+        <action
+            android:id="@+id/action_ownRecipeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.quotes_app.presentation.DetailFragment"
         android:label="Detail"
         tools:layout="@layout/fragment_detail">
     </fragment>
+
+    <fragment
+        android:id="@+id/addRecipeFragment"
+        android:name="com.example.quotes_app.presentation.AddRecipeFragment"
+        android:label="Add New Recipe"
+        tools:layout="@layout/fragment_add_recipe" />
 </navigation>

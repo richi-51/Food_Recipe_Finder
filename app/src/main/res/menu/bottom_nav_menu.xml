@@ -8,4 +8,8 @@
         android:id="@+id/favoriteFragment"
         android:icon="@android:drawable/btn_star"
         android:title="Favorite" />
+    <item
+        android:id="@+id/ownRecipeFragment"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Own Recipe" />
 </menu>

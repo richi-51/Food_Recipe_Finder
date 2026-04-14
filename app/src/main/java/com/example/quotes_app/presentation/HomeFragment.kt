@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.quotes_app.R
 import com.example.quotes_app.databinding.FragmentHomeBinding
 import com.example.quotes_app.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,10 +45,10 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         recipeAdapter = RecipeAdapter { recipe ->
-            val bundle = android.os.Bundle().apply {
+            val bundle = Bundle().apply {
                 putParcelable("recipe", recipe)
             }
-            findNavController().navigate(com.example.quotes_app.R.id.action_homeFragment_to_detailFragment, bundle)
+            findNavController().navigate(R.id.action_homeFragment_to_detailFragment, bundle)
         }
         binding.rvRecipes.apply {
             adapter = recipeAdapter

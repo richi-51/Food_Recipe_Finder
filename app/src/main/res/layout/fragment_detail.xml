@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#121212"
     tools:context=".presentation.DetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +28,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="-28dp"
             android:src="@android:drawable/btn_star"
-            app:tint="@color/white"
+            app:backgroundTint="@color/purple_500"
+            app:tint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/iv_recipe_thumb" />
 
@@ -38,7 +40,7 @@
             android:layout_margin="16dp"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@android:color/white"
             app:layout_constraintTop_toBottomOf="@id/iv_recipe_thumb"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +53,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:textStyle="italic"
+            android:textColor="#DDFFFFFF"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Side, Turkish" />
@@ -63,7 +66,7 @@
             android:layout_marginTop="16dp"
             android:text="Instructions:"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="@android:color/white"
             app:layout_constraintTop_toBottomOf="@id/tv_category"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -72,6 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+            android:textColor="#DDFFFFFF"
             app:layout_constraintTop_toBottomOf="@id/tv_instructions_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
