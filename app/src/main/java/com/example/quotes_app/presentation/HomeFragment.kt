@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.quotes_app.R
 import com.example.quotes_app.databinding.FragmentHomeBinding
 import com.example.quotes_app.utils.Resource
+import com.example.quotes_app.utils.ThemeManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -26,6 +27,7 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var recipeAdapter: RecipeAdapter
+    private lateinit var themeManager: ThemeManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +39,11 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        themeManager = ThemeManager(requireContext())
 
         setupRecyclerView()
         setupSearchView()
+        setupThemeToggle()
         observeViewModel()
     }
 
@@ -68,6 +72,24 @@ class HomeFragment : Fragment() {
                 return false
             }
         })
+    }
+
+    private fun setupThemeToggle() {
+        updateThemeIcon()
+        binding.btnThemeToggle.setOnClickListener {
+            val isDark = themeManager.isDarkMode()
+            themeManager.setDarkMode(!isDark)
+            updateThemeIcon()
+            requireActivity().recreate()
+        }
+    }
+
+    private fun updateThemeIcon() {
+        if (themeManager.isDarkMode()) {
+            binding.btnThemeToggle.setImageResource(android.R.drawable.ic_menu_day)
+        } else {
+            binding.btnThemeToggle.setImageResource(android.R.drawable.ic_menu_recent_history) // Using a moon-like icon if possible, or just another one
+        }
     }
 
     private fun observeViewModel() {
