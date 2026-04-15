@@ -76,16 +76,16 @@ class HomeFragment : Fragment() {
                 viewModel.recipes.collect { resource ->
                     when (resource) {
                         is Resource.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
+                            binding.loadingLayout.visibility = View.VISIBLE
                             binding.tvError.visibility = View.GONE
                         }
                         is Resource.Success -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.loadingLayout.visibility = View.GONE
                             binding.tvError.visibility = View.GONE
                             recipeAdapter.submitList(resource.data)
                         }
                         is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.loadingLayout.visibility = View.GONE
                             binding.tvError.visibility = View.VISIBLE
                             binding.tvError.text = resource.message
                             recipeAdapter.submitList(emptyList())

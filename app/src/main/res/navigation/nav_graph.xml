@@ -50,4 +50,14 @@
         android:name="com.example.quotes_app.presentation.AddRecipeFragment"
         android:label="Add New Recipe"
         tools:layout="@layout/fragment_add_recipe" />
+
+    <fragment
+        android:id="@+id/randomRecipeFragment"
+        android:name="com.example.quotes_app.presentation.RandomRecipeFragment"
+        android:label="Surprise Me"
+        tools:layout="@layout/fragment_random_recipe">
+        <action
+            android:id="@+id/action_randomRecipeFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 </navigation>
