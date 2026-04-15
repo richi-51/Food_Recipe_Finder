@@ -10,4 +10,7 @@ interface RecipeApi {
     
     @GET("lookup.php")
     suspend fun getRecipeById(@Query("i") id: String): Response<RecipeResponse>
+
+    @GET("random.php")
+    suspend fun getRandomRecipe(): Response<RecipeResponse>
 }

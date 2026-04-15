@@ -15,6 +15,8 @@ class RecipeRepository @Inject constructor(
 
     suspend fun getRecipeById(id: String) = api.getRecipeById(id)
 
+    suspend fun getRandomRecipe() = api.getRandomRecipe()
+
     // Favorites
     fun getAllFavorites(): Flow<List<Recipe>> = dao.getAllFavorites()
     fun isFavorite(id: String): Flow<Boolean> = dao.isFavorite(id)
