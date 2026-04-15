@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="?attr/android:windowBackground"
     tools:context=".presentation.HomeFragment">
 
     <LinearLayout
@@ -25,8 +25,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:queryHint="Search recipes..."
-            android:iconifiedByDefault="false"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+            android:iconifiedByDefault="false" />
+
+        <ImageButton
+            android:id="@+id/btn_theme_toggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_day"
+            android:contentDescription="Toggle Theme"
+            app:tint="?attr/colorOnSurface" />
 
     </LinearLayout>
 
@@ -64,7 +72,7 @@
         android:id="@+id/tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorOnSurface"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

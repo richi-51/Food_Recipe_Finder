@@ -8,7 +8,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="#212121">
+    app:cardBackgroundColor="?attr/colorSurface">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/colorOnSurface"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_thumb"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,8 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:textSize="14sp"
-            android:textColor="#DDFFFFFF"
+            android:textColor="?attr/colorOnSurface"
+            android:alpha="0.7"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toEndOf="@id/iv_thumb"
             app:layout_constraintEnd_toEndOf="parent"
