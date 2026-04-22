@@ -65,23 +65,42 @@ class OwnRecipeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        ownRecipeAdapter = OwnRecipeAdapter { ownRecipe ->
-            val recipe = Recipe(
-                idMeal = ownRecipe.id,
-                strMeal = ownRecipe.title,
-                strCategory = ownRecipe.category,
-                strArea = ownRecipe.area,
-                strInstructions = ownRecipe.instructions,
-                strMealThumb = ownRecipe.imagePath
-            )
-            val bundle = Bundle().apply {
-                putParcelable("recipe", recipe)
+        ownRecipeAdapter = OwnRecipeAdapter(
+            onItemClick = { ownRecipe ->
+                val recipe = Recipe(
+                    idMeal = ownRecipe.id,
+                    strMeal = ownRecipe.title,
+                    strCategory = ownRecipe.category,
+                    strArea = ownRecipe.area,
+                    strInstructions = ownRecipe.instructions,
+                    strMealThumb = ownRecipe.imagePath
+                )
+                val bundle = Bundle().apply {
+                    putParcelable("recipe", recipe)
+                }
+                findNavController().navigate(R.id.action_ownRecipeFragment_to_detailFragment, bundle)
+            },
+            onEditClick = { ownRecipe ->
+                val bundle = Bundle().apply {
+                    putParcelable("recipe_to_edit", ownRecipe)
+                }
+                findNavController().navigate(R.id.action_ownRecipeFragment_to_addRecipeFragment, bundle)
+            },
+            onDeleteClick = { ownRecipe ->
+                viewModel.deleteRecipe(ownRecipe)
             }
-            findNavController().navigate(R.id.action_ownRecipeFragment_to_detailFragment, bundle)
-        }
+        )
         binding.rvOwnRecipes.apply {
             adapter = ownRecipeAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!recyclerView.canScrollVertically(1)) {
+                        viewModel.loadMore()
+                    }
+                }
+            })
         }
     }
 

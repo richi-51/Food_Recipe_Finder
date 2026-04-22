@@ -14,10 +14,16 @@ class AddRecipeViewModel @Inject constructor(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
+    private var editingId: String? = null
+
+    fun setEditingId(id: String) {
+        editingId = id
+    }
+
     fun saveRecipe(name: String, category: String, instructions: String, imagePath: String?) {
         viewModelScope.launch {
             val recipe = OwnRecipe(
-                id = UUID.randomUUID().toString(),
+                id = editingId ?: UUID.randomUUID().toString(),
                 title = name,
                 category = category,
                 instructions = instructions,

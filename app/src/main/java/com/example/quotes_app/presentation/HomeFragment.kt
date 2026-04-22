@@ -44,6 +44,11 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         setupSearchView()
         setupThemeToggle()
+        
+        binding.btnLoadMore.setOnClickListener {
+            viewModel.loadMore()
+        }
+        
         observeViewModel()
     }
 
@@ -80,38 +85,44 @@ class HomeFragment : Fragment() {
             val isDark = themeManager.isDarkMode()
             themeManager.setDarkMode(!isDark)
             updateThemeIcon()
-            requireActivity().recreate()
         }
     }
 
     private fun updateThemeIcon() {
         if (themeManager.isDarkMode()) {
-            binding.btnThemeToggle.setImageResource(android.R.drawable.ic_menu_day)
+            binding.btnThemeToggle.setImageResource(R.drawable.ic_sun)
         } else {
-            binding.btnThemeToggle.setImageResource(android.R.drawable.ic_menu_recent_history) // Using a moon-like icon if possible, or just another one
+            binding.btnThemeToggle.setImageResource(R.drawable.ic_moon)
         }
     }
 
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.recipes.collect { resource ->
-                    when (resource) {
-                        is Resource.Loading -> {
-                            binding.loadingLayout.visibility = View.VISIBLE
-                            binding.tvError.visibility = View.GONE
+                launch {
+                    viewModel.recipes.collect { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                                binding.loadingLayout.visibility = View.VISIBLE
+                                binding.tvError.visibility = View.GONE
+                            }
+                            is Resource.Success -> {
+                                binding.loadingLayout.visibility = View.GONE
+                                binding.tvError.visibility = View.GONE
+                                recipeAdapter.submitList(resource.data)
+                            }
+                            is Resource.Error -> {
+                                binding.loadingLayout.visibility = View.GONE
+                                binding.tvError.visibility = View.VISIBLE
+                                binding.tvError.text = resource.message
+                                recipeAdapter.submitList(emptyList())
+                            }
                         }
-                        is Resource.Success -> {
-                            binding.loadingLayout.visibility = View.GONE
-                            binding.tvError.visibility = View.GONE
-                            recipeAdapter.submitList(resource.data)
-                        }
-                        is Resource.Error -> {
-                            binding.loadingLayout.visibility = View.GONE
-                            binding.tvError.visibility = View.VISIBLE
-                            binding.tvError.text = resource.message
-                            recipeAdapter.submitList(emptyList())
-                        }
+                    }
+                }
+                launch {
+                    viewModel.hasNextPage.collect { hasNext ->
+                        binding.btnLoadMore.visibility = if (hasNext) View.VISIBLE else View.GONE
                     }
                 }
             }

@@ -13,6 +13,9 @@ interface OwnRecipeDao {
     @Query("SELECT * FROM own_recipes")
     fun getAllOwnRecipes(): Flow<List<OwnRecipe>>
 
+    @Query("SELECT * FROM own_recipes LIMIT :limit")
+    fun getOwnRecipesPaginated(limit: Int): Flow<List<OwnRecipe>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOwnRecipe(recipe: OwnRecipe)
 

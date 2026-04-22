@@ -21,7 +21,14 @@ class HomeViewModel @Inject constructor(
     private val _recipes = MutableStateFlow<Resource<List<Recipe>>>(Resource.Loading())
     val recipes: StateFlow<Resource<List<Recipe>>> = _recipes.asStateFlow()
 
+    private val _hasNextPage = MutableStateFlow(false)
+    val hasNextPage: StateFlow<Boolean> = _hasNextPage.asStateFlow()
+
     private val _searchQuery = MutableStateFlow("")
+
+    private var allRecipes: List<Recipe> = emptyList()
+    private var currentPage = 1
+    private val pageSize = 10
 
     init {
         observeSearch()
@@ -41,14 +48,18 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun fetchRecipes(query: String) {
         _recipes.value = Resource.Loading()
+        _hasNextPage.value = false
         try {
             val response = repository.searchRecipes(query)
             if (response.isSuccessful) {
                 val remoteRecipes = response.body()?.meals ?: emptyList()
                 if (remoteRecipes.isEmpty()) {
+                    allRecipes = emptyList()
                     _recipes.value = Resource.Error("No recipes found")
                 } else {
-                    _recipes.value = Resource.Success(remoteRecipes)
+                    allRecipes = remoteRecipes
+                    currentPage = 1
+                    updatePaginatedList()
                 }
             } else {
                 _recipes.value = Resource.Error("Error: ${response.message()}")
@@ -56,5 +67,19 @@ class HomeViewModel @Inject constructor(
         } catch (e: Exception) {
             _recipes.value = Resource.Error("Failed to fetch data: ${e.localizedMessage}")
         }
+    }
+
+    fun loadMore() {
+        if (_hasNextPage.value) {
+            currentPage++
+            updatePaginatedList()
+        }
+    }
+
+    private fun updatePaginatedList() {
+        val endIndex = (currentPage * pageSize).coerceAtMost(allRecipes.size)
+        val paginatedList = allRecipes.subList(0, endIndex)
+        _recipes.value = Resource.Success(paginatedList.toList())
+        _hasNextPage.value = endIndex < allRecipes.size
     }
 }
