@@ -82,6 +82,9 @@ dependencies {
     implementation(libs.hilt.android)
     "kapt"(libs.hilt.compiler)
 
+    // Lottie
+    implementation(libs.lottie)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
