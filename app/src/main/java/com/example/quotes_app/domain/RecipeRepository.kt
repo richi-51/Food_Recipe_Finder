@@ -19,12 +19,14 @@ class RecipeRepository @Inject constructor(
 
     // Favorites
     fun getAllFavorites(): Flow<List<Recipe>> = dao.getAllFavorites()
+    fun getFavoritesPaginated(limit: Int): Flow<List<Recipe>> = dao.getFavoritesPaginated(limit)
     fun isFavorite(id: String): Flow<Boolean> = dao.isFavorite(id)
     suspend fun insertFavorite(recipe: Recipe) = dao.insertFavorite(recipe)
     suspend fun deleteFavorite(recipe: Recipe) = dao.deleteFavorite(recipe)
 
     // Own Recipes
     fun getAllOwnRecipes(): Flow<List<OwnRecipe>> = ownRecipeDao.getAllOwnRecipes()
+    fun getOwnRecipesPaginated(limit: Int): Flow<List<OwnRecipe>> = ownRecipeDao.getOwnRecipesPaginated(limit)
     suspend fun insertOwnRecipe(recipe: OwnRecipe) = ownRecipeDao.insertOwnRecipe(recipe)
     suspend fun deleteOwnRecipe(recipe: OwnRecipe) = ownRecipeDao.deleteOwnRecipe(recipe)
 }

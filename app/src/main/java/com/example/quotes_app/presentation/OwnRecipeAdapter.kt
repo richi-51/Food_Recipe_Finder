@@ -10,7 +10,9 @@ import com.example.quotes_app.databinding.ItemRecipeBinding
 import com.example.quotes_app.domain.OwnRecipe
 
 class OwnRecipeAdapter(
-    private val onItemClick: (OwnRecipe) -> Unit
+    private val onItemClick: (OwnRecipe) -> Unit,
+    private val onEditClick: (OwnRecipe) -> Unit,
+    private val onDeleteClick: (OwnRecipe) -> Unit
 ) : ListAdapter<OwnRecipe, OwnRecipeAdapter.OwnRecipeViewHolder>(OwnRecipeDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OwnRecipeViewHolder {
@@ -27,6 +29,9 @@ class OwnRecipeAdapter(
             binding.tvTitle.text = recipe.title
             binding.tvCategory.text = recipe.category
             
+            binding.btnEdit.visibility = android.view.View.VISIBLE
+            binding.btnDelete.visibility = android.view.View.VISIBLE
+            
             Glide.with(binding.root)
                 .load(recipe.imagePath)
                 .placeholder(android.R.drawable.ic_menu_gallery)
@@ -35,6 +40,12 @@ class OwnRecipeAdapter(
 
             binding.root.setOnClickListener {
                 onItemClick(recipe)
+            }
+            binding.btnEdit.setOnClickListener {
+                onEditClick(recipe)
+            }
+            binding.btnDelete.setOnClickListener {
+                onDeleteClick(recipe)
             }
         }
     }

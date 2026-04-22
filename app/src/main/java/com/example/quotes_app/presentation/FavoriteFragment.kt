@@ -45,6 +45,14 @@ class FavoriteFragment : Fragment() {
         binding.rvFavorites.apply {
             adapter = recipeAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (!recyclerView.canScrollVertically(1)) {
+                        viewModel.loadMore()
+                    }
+                }
+            })
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

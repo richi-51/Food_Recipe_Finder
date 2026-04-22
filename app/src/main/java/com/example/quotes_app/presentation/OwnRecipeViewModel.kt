@@ -13,14 +13,20 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class OwnRecipeViewModel @Inject constructor(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
+    private val _limit = MutableStateFlow(10)
 
-    val ownRecipes: StateFlow<List<OwnRecipe>> = repository.getAllOwnRecipes()
+    val ownRecipes: StateFlow<List<OwnRecipe>> = _limit
+        .flatMapLatest { limit -> repository.getOwnRecipesPaginated(limit) }
         .combine(_searchQuery) { recipes, query ->
             if (query.isBlank()) {
                 recipes
@@ -41,5 +47,9 @@ class OwnRecipeViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteOwnRecipe(recipe)
         }
+    }
+
+    fun loadMore() {
+        _limit.value += 10
     }
 }

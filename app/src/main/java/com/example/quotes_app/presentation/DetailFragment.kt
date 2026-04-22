@@ -53,8 +53,10 @@ class DetailFragment : Fragment() {
                     isFavorite = favorite
                     if (favorite) {
                         binding.fabFavorite.setImageResource(android.R.drawable.btn_star_big_on)
+                        binding.fabFavorite.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#FFD700"))
                     } else {
                         binding.fabFavorite.setImageResource(android.R.drawable.btn_star_big_off)
+                        binding.fabFavorite.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#9E9E9E"))
                     }
                 }
             }

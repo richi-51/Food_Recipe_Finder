@@ -13,6 +13,9 @@ interface RecipeDao {
     @Query("SELECT * FROM favorite_recipes")
     fun getAllFavorites(): Flow<List<Recipe>>
 
+    @Query("SELECT * FROM favorite_recipes LIMIT :limit")
+    fun getFavoritesPaginated(limit: Int): Flow<List<Recipe>>
+
     @Query("SELECT EXISTS(SELECT 1 FROM favorite_recipes WHERE idMeal = :id)")
     fun isFavorite(id: String): Flow<Boolean>
 

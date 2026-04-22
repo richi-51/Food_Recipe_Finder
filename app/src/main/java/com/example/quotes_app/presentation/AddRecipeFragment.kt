@@ -44,6 +44,20 @@ class AddRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val recipeToEdit = arguments?.getParcelable<com.example.quotes_app.domain.OwnRecipe>("recipe_to_edit")
+        if (recipeToEdit != null) {
+            viewModel.setEditingId(recipeToEdit.id)
+            binding.etRecipeName.setText(recipeToEdit.title)
+            binding.etRecipeCategory.setText(recipeToEdit.category)
+            binding.etRecipeInstructions.setText(recipeToEdit.instructions)
+            binding.btnSaveRecipe.text = "Update Recipe"
+            
+            recipeToEdit.imagePath?.let { path ->
+                selectedImageUri = Uri.parse(path)
+                Glide.with(this).load(path).into(binding.ivRecipePreview)
+            }
+        }
+
         binding.btnSelectImage.setOnClickListener {
             selectImageLauncher.launch("image/*")
         }
@@ -55,7 +69,8 @@ class AddRecipeFragment : Fragment() {
 
             if (name.isNotEmpty() && category.isNotEmpty() && instructions.isNotEmpty()) {
                 viewModel.saveRecipe(name, category, instructions, selectedImageUri?.toString())
-                Toast.makeText(requireContext(), "Recipe $name Saved!", Toast.LENGTH_SHORT).show()
+                val msg = if (recipeToEdit != null) "Recipe Updated!" else "Recipe Saved!"
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
