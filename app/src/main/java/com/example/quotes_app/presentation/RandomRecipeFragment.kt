@@ -4,24 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import android.widget.Toast
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import coil.compose.AsyncImage
+import coil.load
 import com.example.quotes_app.R
 import com.example.quotes_app.domain.Recipe
 import com.example.quotes_app.utils.Resource
@@ -31,131 +20,71 @@ import dagger.hilt.android.AndroidEntryPoint
 class RandomRecipeFragment : Fragment() {
 
     private val viewModel: RandomRecipeViewModel by viewModels()
+    private var currentRecipe: Recipe? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                MaterialTheme(
-                    colorScheme = if (com.example.quotes_app.utils.ThemeManager(requireContext()).isDarkMode()) 
-                        darkColorScheme() 
-                    else 
-                        lightColorScheme()
-                ) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        RandomRecipeScreen(
-                            viewModel = viewModel,
-                            onRecipeClick = { recipe ->
-                                val bundle = Bundle().apply {
-                                    putParcelable("recipe", recipe)
-                                }
-                                findNavController().navigate(R.id.action_randomRecipeFragment_to_detailFragment, bundle)
-                            }
-                        )
+        return inflater.inflate(R.layout.fragment_random_recipe, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val btn = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_surprise_me)
+        val card = view.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cv_random_result)
+        val name = view.findViewById<android.widget.TextView>(R.id.tv_random_name)
+        val category = view.findViewById<android.widget.TextView>(R.id.tv_random_category)
+        val image = view.findViewById<android.widget.ImageView>(R.id.iv_random_thumb)
+        val progress = view.findViewById<android.widget.ProgressBar>(R.id.pb_loading)
+
+        // Button click
+        btn.setOnClickListener {
+            viewModel.getRandomRecipe()
+        }
+
+        // Observe data
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.randomRecipe.collect { state ->
+                when (state) {
+
+                    is Resource.Loading -> {
+                        progress.visibility = View.VISIBLE
+                        card.visibility = View.INVISIBLE
                     }
+
+                    is Resource.Success -> {
+                        progress.visibility = View.GONE
+                        card.visibility = View.VISIBLE
+
+                        val recipe = state.data
+                        currentRecipe = recipe
+
+                        name.text = recipe?.strMeal
+                        category.text = recipe?.strCategory
+                        image.load(recipe?.strMealThumb)
+                    }
+
+                    is Resource.Error -> {
+                        progress.visibility = View.GONE
+                        card.visibility = View.INVISIBLE
+                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
         }
-    }
-}
 
-@Composable
-fun RandomRecipeScreen(
-    viewModel: RandomRecipeViewModel,
-    onRecipeClick: (Recipe) -> Unit
-) {
-    val recipeState by viewModel.randomRecipe.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = { viewModel.getRandomRecipe() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-        ) {
-            Text(
-                "Surprise Me!", 
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        when (val state = recipeState) {
-            is Resource.Loading -> {
-                CircularProgressIndicator()
-            }
-            is Resource.Success -> {
-                state.data?.let { recipe ->
-                    RecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe) })
+        card.setOnClickListener {
+            currentRecipe?.let { recipe ->
+                val bundle = Bundle().apply {
+                    putParcelable("recipe", recipe)
                 }
-            }
-            is Resource.Error -> {
-                Text(
-                    text = state.message ?: "Failed to fetch recipe",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            else -> {
-                Text(
-                    text = "Tap the button above to discover a new recipe!",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun RecipeCard(recipe: Recipe, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Column {
-            AsyncImage(
-                model = recipe.strMealThumb,
-                contentDescription = recipe.strMeal,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = recipe.strMeal,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = recipe.strCategory ?: "Unknown Category",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                findNavController().navigate(
+                    R.id.action_randomRecipeFragment_to_detailFragment,
+                    bundle
                 )
             }
         }
