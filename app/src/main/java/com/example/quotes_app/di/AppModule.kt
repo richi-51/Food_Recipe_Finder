@@ -71,4 +71,16 @@ object AppModule {
     fun provideOwnRecipeDao(database: RecipeDatabase): OwnRecipeDao {
         return database.ownRecipeDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideOrderDao(database: RecipeDatabase): com.example.quotes_app.data.local.OrderDao {
+        return database.orderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: RecipeDatabase): com.example.quotes_app.data.local.UserDao {
+        return database.userDao()
+    }
 }
