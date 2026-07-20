@@ -35,5 +35,34 @@ Aplikasi ini dibangun menggunakan alat dan _library_ standar industri yang sanga
 ## 🛡️ Aturan Kontribusi / Keamanan
 File-file _Credentials_ berharga seperti (`.jks`, `keystore`, `local.properties`) telah dikunci di dalam file `.gitignore`. Mohon pastikan menaruh segala referensi String unik yang berhubungan dengan kata sandi Server atau token API pada `local.properties` (Gunakan `BuildConfig` merujuk ke properti tersebut lewat gradle).
 
+## ⚙️ CI/CD dan Integration Testing
+
+Project ini sudah disiapkan dengan GitHub Actions:
+
+- **CI**: `.github/workflows/ci.yml`
+   - Menjalankan `lintDebug` + `testDebugUnitTest`
+   - Menjalankan integration test Android melalui emulator (`connectedDebugAndroidTest`)
+   - Mengunggah report test sebagai artifact workflow
+
+- **CD**: `.github/workflows/cd.yml`
+   - Trigger saat push tag versi dengan pola `v*` (contoh `v1.0.0`)
+   - Build `assembleRelease` dan `bundleRelease`
+   - Upload APK/AAB sebagai artifact workflow dan sebagai GitHub Release asset
+
+### Jalankan test secara lokal
+
+Pastikan `local.properties` sudah berisi `sdk.dir=...` Android SDK yang valid.
+
+```bash
+./gradlew lintDebug testDebugUnitTest
+./gradlew connectedDebugAndroidTest
+```
+
+Untuk membuat release lokal:
+
+```bash
+./gradlew assembleRelease bundleRelease
+```
+
 ## 📄 Struktur Pembelajaran
 Proyek ini di-set selaras guna mengakomodasi materi pembelajaran Android fundamental seperti **Activity**, **Fragment**, **ListView/RecyclerView**, **Design UI Lanjutan**, dan **REST API JSON Parsing**. Pengaturan Plugin telah difosilkan (LTS 8.5/8.9) untuk mempermudah pengembangan pemula dan mencegah ketidakcocokan plugin di sistem yang dinamis!
