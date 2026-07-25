@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -115,7 +116,7 @@ fun LoginScreen(
                         onValueChange = { username = it },
                         label = { Text("Username") },
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Username") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("usernameField"),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -127,7 +128,7 @@ fun LoginScreen(
                         label = { Text("Password") },
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password") },
                         visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().testTag("passwordField"),
                         singleLine = true,
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -138,7 +139,7 @@ fun LoginScreen(
                             text = (authState as AuthState.Error).message,
                             color = MaterialTheme.colorScheme.error,
                             fontSize = 12.sp,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            modifier = Modifier.padding(bottom = 16.dp).testTag("errorMessage")
                         )
                     }
 
@@ -149,7 +150,8 @@ fun LoginScreen(
                             onClick = { viewModel.login(username, password) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp),
+                                .height(50.dp)
+                                .testTag("loginButton"),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
                         ) {
@@ -164,7 +166,7 @@ fun LoginScreen(
                         color = Color(0xFF1E1E2C),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.clickable { onNavigateToRegister() }
+                        modifier = Modifier.testTag("registerText").clickable { onNavigateToRegister() }
                     )
                 }
             }

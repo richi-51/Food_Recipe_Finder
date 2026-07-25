@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -75,7 +76,7 @@ fun HomeScreen(
                         searchQuery = it 
                         viewModel.searchRecipes(it)
                     },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).testTag("searchField"),
                     placeholder = { Text("Search recipes...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     singleLine = true,
@@ -99,10 +100,11 @@ fun HomeScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onNavigateToSurprise,
-                icon = { Icon(painter = painterResource(id = R.drawable.ic_sun), contentDescription = null) }, // Using sun icon as a placeholder for surprise, or better yet, a Star icon if available. I will use Text only for now or a standard icon.
+                icon = { Icon(painter = painterResource(id = R.drawable.ic_sun), contentDescription = null) },
                 text = { Text("Surprise Me!") },
                 containerColor = Color(0xFFFF9800),
-                contentColor = Color.White
+                contentColor = Color.White,
+                modifier = Modifier.testTag("surpriseButton")
             )
         }
     ) { paddingValues ->
@@ -115,13 +117,13 @@ fun HomeScreen(
                     Text(
                         text = resource.message ?: "An error occurred",
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center).testTag("errorMessage")
                     )
                 }
                 is Resource.Success -> {
                     val recipes = resource.data ?: emptyList()
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize().testTag("recipeList")
                     ) {
                         items(recipes) { recipe ->
                             RecipeItem(recipe = recipe, onClick = { onNavigateToDetail(recipe) })
@@ -134,7 +136,10 @@ fun HomeScreen(
                                         .padding(16.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Button(onClick = { viewModel.loadMore() }) {
+                                    Button(
+                                        onClick = { viewModel.loadMore() },
+                                        modifier = Modifier.testTag("loadMoreButton")
+                                    ) {
                                         Text("Load More")
                                     }
                                 }

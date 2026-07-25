@@ -7,31 +7,31 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SessionManager @Inject constructor(
-    @ApplicationContext context: Context
+open class SessionManager @Inject constructor(
+    @ApplicationContext context: Context?
 ) {
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences? = context?.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun login(username: String) {
-        prefs.edit()
-            .putBoolean(KEY_IS_LOGGED_IN, true)
-            .putString(KEY_USERNAME, username)
-            .apply()
+    open fun login(username: String) {
+        prefs?.edit()
+            ?.putBoolean(KEY_IS_LOGGED_IN, true)
+            ?.putString(KEY_USERNAME, username)
+            ?.apply()
     }
 
-    fun logout() {
-        prefs.edit()
-            .putBoolean(KEY_IS_LOGGED_IN, false)
-            .remove(KEY_USERNAME)
-            .apply()
+    open fun logout() {
+        prefs?.edit()
+            ?.putBoolean(KEY_IS_LOGGED_IN, false)
+            ?.remove(KEY_USERNAME)
+            ?.apply()
     }
 
-    fun isLoggedIn(): Boolean {
-        return prefs.getBoolean(KEY_IS_LOGGED_IN, false)
+    open fun isLoggedIn(): Boolean {
+        return prefs?.getBoolean(KEY_IS_LOGGED_IN, false) ?: false
     }
 
-    fun getUsername(): String? {
-        return prefs.getString(KEY_USERNAME, null)
+    open fun getUsername(): String? {
+        return prefs?.getString(KEY_USERNAME, null)
     }
 
     companion object {

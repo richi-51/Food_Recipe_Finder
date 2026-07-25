@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +58,8 @@ fun DetailScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.toggleFavorite(recipe, isFavorite) },
-                containerColor = if (isFavorite) Color(0xFFFFD700) else Color.LightGray
+                containerColor = if (isFavorite) Color(0xFFFFD700) else Color.LightGray,
+                modifier = Modifier.testTag("favoriteFab")
             ) {
                 Icon(
                     Icons.Default.Star,
@@ -116,7 +118,7 @@ fun DetailScreen(
                 
                 androidx.compose.material3.Button(
                     onClick = { onOrderClick(recipe) },
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
+                    modifier = Modifier.fillMaxWidth().height(50.dp).testTag("orderIngredientsButton")
                 ) {
                     Text("Order Ingredients", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }

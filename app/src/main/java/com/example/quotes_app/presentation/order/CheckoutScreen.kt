@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,6 +60,7 @@ fun CheckoutScreen(
                         showSuccessDialog = false
                         onCheckoutSuccess()
                     },
+                    modifier = Modifier.testTag("dialogOkButton"),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800))
                 ) {
                     Text("OK")
@@ -100,7 +102,7 @@ fun CheckoutScreen(
                 onValueChange = { address = it },
                 placeholder = { Text("Enter your full delivery address...") },
                 leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = "Address", tint = Color.Gray) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("addressField"),
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedContainerColor = Color.White,
@@ -223,7 +225,7 @@ fun CheckoutScreen(
                 Text(
                     text = (orderState as OrderState.Error).message,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp).testTag("checkoutErrorMessage")
                 )
             }
 
@@ -237,7 +239,8 @@ fun CheckoutScreen(
                     onClick = { viewModel.placeOrder(recipe, address) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(55.dp),
+                        .height(55.dp)
+                        .testTag("placeOrderButton"),
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
                     enabled = address.isNotBlank()

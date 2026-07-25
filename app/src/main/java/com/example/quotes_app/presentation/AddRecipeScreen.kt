@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,21 +42,21 @@ fun AddRecipeScreen(
                 value = name,
                 onValueChange = { name = it },
                 label = { Text("Recipe Name") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("recipeNameField")
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = category,
                 onValueChange = { category = it },
                 label = { Text("Category") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("categoryField")
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = instructions,
                 onValueChange = { instructions = it },
                 label = { Text("Instructions") },
-                modifier = Modifier.fillMaxWidth().weight(1f),
+                modifier = Modifier.fillMaxWidth().weight(1f).testTag("instructionsField"),
                 maxLines = 10
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -64,7 +65,7 @@ fun AddRecipeScreen(
                     viewModel.saveRecipe(name, category, instructions, if (imagePath.isNotBlank()) imagePath else null)
                     onNavigateBack()
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag("saveRecipeButton"),
                 enabled = name.isNotBlank() && category.isNotBlank() && instructions.isNotBlank()
             ) {
                 Text("Save Recipe")
